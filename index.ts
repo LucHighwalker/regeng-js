@@ -62,7 +62,15 @@ export default class Regeng {
       characters = phrase.replace(/( and )/, '-').match(/[a-z]-[a-z]/)[0];
     } else if (/( ([a-z] )+(and )([a-z]))/.test(phrase)) {
       characters = phrase.match(/( ([a-z] )+(and )([a-z]))/)[0].replace(/( )|(and)/g, '');
-    }
+		}
+		
+		if (/(uppercase)/.test(phrase)){
+			characters = characters.toUpperCase();
+		} else if (/(lowercase)/.test(phrase)) {
+			characters = characters.toLowerCase();
+		} else {
+			characters = `${characters.toUpperCase()}${characters.toLowerCase()}`
+		}
 
 		return `${except}[${characters}]${multiples}`;
 	}

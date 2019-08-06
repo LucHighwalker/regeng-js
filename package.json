@@ -4,12 +4,17 @@
   "description": "A javascript implementatin of the ruby regeng gem. Allows the generation of regular expressions using plain english.",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Luc Highwalker",
   "license": "ISC",
   "dependencies": {
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
   }
 }
