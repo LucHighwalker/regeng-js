@@ -1,64 +1,83 @@
-const CHARACTER_COND = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/g
-const CHARACTER_SIMP = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/g
+const CharacterCond = /((any )?(character)(s)?( except)?( between)?( [a-zA-Z])+((-)|( through )|( to )|( and )){1}[a-zA-Z]){1}/;
+const CharacterSimp = /((any )?((uppercase )?|(lowercase )?)(character)(s)?){1}/;
 
-const DIGIT_COND = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])(0)*((-)|( through )|( to )|( and )){1}([0-9])(0)*){1}/g
-const DIGIT_SIMP = /(any ((digit)|(number))(s)?){1}/g
+const DigitCond = /((any )?((digit)|(number))(s)?( except)?( between)?( [0-9])(0)*((-)|( through )|( to )|( and )){1}([0-9])(0)*){1}/;
+const DigitSimp = /(any ((digit)|(number))(s)?){1}/;
 
-const AT_COND = /( at )((start)|(end))( of )((line)|(string))/g
+const AtCond = /( at )((start)|(end))( of )((line)|(string))/;
 
-class Regeng {
-  plain: string;
-  re: RegExp;
+export default class Regeng {
+	plain: string;
+	re: RegExp;
 
-  constructor(phrase: string) {
-    this.plain = phrase;
+	constructor(phrase: string) {
+		this.new(phrase);
+	}
 
-    let pattern: string = this.expression(phrase);
+	public new(phrase: string): RegExp {
+		this.plain = phrase;
 
-    this.re = new RegExp(pattern);
-  }
+		let pattern: string = this._expression();
 
-  public expression(phrase: string): string {
-    let pattern = ''
-    switch (true) {
-      case CHARACTER_COND.test(phrase):
-        console.log('this is true')
-        break;
-        
-      case CHARACTER_SIMP.test(phrase):
-        pattern = this.character_simp(phrase)
-        break;
+		this.re = new RegExp(pattern);
+		return this.re;
+	}
 
-      case DIGIT_COND.test(phrase):
-        console.log('this is true')
-        break;
+	private _expression(): string {
+		const phrase = this.plain;
+		let pattern = "";
+		switch (true) {
+			case CharacterCond.test(phrase):
+				pattern = this._characterCond();
+				break;
 
-      case DIGIT_SIMP.test(phrase):
-        console.log('this is true')
-        break;
+			case CharacterSimp.test(phrase):
+				pattern = this._characterSimp();
+				break;
+
+			case DigitCond.test(phrase):
+				console.log("this is true");
+				break;
+
+			case DigitSimp.test(phrase):
+				console.log("this is true");
+				break;
+
+			default:
+				break;
+		}
+
+		return pattern;
+	}
+
+	private _characterCond(): string {
+		const phrase = this.plain.replace(/( through )|( to )/, "-");
+		const except = /(except)/.test(phrase) ? "^" : "";
+		const multiples = /(character)(s)/.test(phrase) ? "+" : "";
+    let characters = "";
     
-      default:
-        break;
+    if (/[a-z]-[a-z]/.test(phrase)) {
+      characters = phrase.match(/[a-z]-[a-z]/)[0];
+    } else if (/(between )([a-z] )+(and )([a-z])/.test(phrase)) {
+      characters = phrase.replace(/( and )/, '-').match(/[a-z]-[a-z]/)[0];
+    } else if (/( ([a-z] )+(and )([a-z]))/.test(phrase)) {
+      characters = phrase.match(/( ([a-z] )+(and )([a-z]))/)[0].replace(/( )|(and)/g, '');
     }
 
-    return pattern;
-  }
+		return `${except}[${characters}]${multiples}`;
+	}
 
-  private character_simp(phrase: string): string {
-    let character_mod = 'A-Za-z'
-    const multiples = /(character)(s)/.test(phrase) ? '+' : ''
-    
-    if (/(uppercase)/.test(phrase)){
-      character_mod = 'A-Z'
-    } else if (/(lowercase)/.test(phrase)){
-      character_mod = 'a-z'
-    }
-    
-    return `[${character_mod}]${multiples}`
-  }
+	private _characterSimp(): string {
+		const phrase = this.plain;
+		const multiples = /(character)(s)/.test(phrase) ? "+" : "";
+		let characters = "A-Za-z";
 
+		if (/(uppercase)/.test(phrase)) {
+			characters = "A-Z";
+		} else if (/(lowercase)/.test(phrase)) {
+			characters = "a-z";
+		}
+
+		return `[${characters}]${multiples}`;
+	}
 }
-
-const regeng = new Regeng('any character');
-console.log(regeng.plain)
-console.log(regeng.re)
