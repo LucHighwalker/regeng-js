@@ -1,10 +1,11 @@
 {
   "name": "regeng",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A javascript implementatin of the ruby regeng gem. Allows the generation of regular expressions using plain english.",
   "main": "index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "author": "Luc Highwalker",
   "license": "ISC",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.17",
+    "coveralls": "^3.0.6",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2"
   }
