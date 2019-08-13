@@ -66,4 +66,62 @@ test("conditional characters", () => {
 	regeng = new Regeng("any lowercase characters e-z");
 	expect(regeng.plain).toBe("any lowercase characters e-z");
 	expect(regeng.re).toStrictEqual(/[e-z]+/);
+
+	regeng = new Regeng("any character e through z");
+	expect(regeng.plain).toBe("any character e through z");
+	expect(regeng.re).toStrictEqual(/[E-Ze-z]/);
+
+	regeng = new Regeng("any characters e through z");
+	expect(regeng.plain).toBe("any characters e through z");
+	expect(regeng.re).toStrictEqual(/[E-Ze-z]+/);
+
+	regeng = new Regeng("any uppercase character e through z");
+	expect(regeng.plain).toBe("any uppercase character e through z");
+	expect(regeng.re).toStrictEqual(/[E-Z]/);
+
+	regeng = new Regeng("any uppercase characters e through z");
+	expect(regeng.plain).toBe("any uppercase characters e through z");
+	expect(regeng.re).toStrictEqual(/[E-Z]+/);
+
+	regeng = new Regeng("any lowercase character e through z");
+	expect(regeng.plain).toBe("any lowercase character e through z");
+	expect(regeng.re).toStrictEqual(/[e-z]/);
+
+	regeng = new Regeng("any lowercase characters e through z");
+	expect(regeng.plain).toBe("any lowercase characters e through z");
+	expect(regeng.re).toStrictEqual(/[e-z]+/);
+
+	regeng = new Regeng("any character between e and z");
+	expect(regeng.plain).toBe("any character between e and z");
+	expect(regeng.re).toStrictEqual(/[E-Ze-z]/);
+
+	regeng = new Regeng("any characters between e and z");
+	expect(regeng.plain).toBe("any characters between e and z");
+	expect(regeng.re).toStrictEqual(/[E-Ze-z]+/);
+
+	regeng = new Regeng("any uppercase character between e and z");
+	expect(regeng.plain).toBe("any uppercase character between e and z");
+	expect(regeng.re).toStrictEqual(/[E-Z]/);
+
+	regeng = new Regeng("any uppercase characters between e and z");
+	expect(regeng.plain).toBe("any uppercase characters between e and z");
+	expect(regeng.re).toStrictEqual(/[E-Z]+/);
+
+	regeng = new Regeng("any lowercase character between e and z");
+	expect(regeng.plain).toBe("any lowercase character between e and z");
+	expect(regeng.re).toStrictEqual(/[e-z]/);
+
+	regeng = new Regeng("any lowercase characters between e and z");
+	expect(regeng.plain).toBe("any lowercase characters between e and z");
+	expect(regeng.re).toStrictEqual(/[e-z]+/);
+});
+
+test("simple digits", () => {
+	let regeng = new Regeng("any number");
+	expect(regeng.plain).toBe("any number");
+	expect(regeng.re).toStrictEqual(/[\d]+/);
+
+	regeng = new Regeng("any numbers");
+	expect(regeng.plain).toBe("any numbers");
+	expect(regeng.re).toStrictEqual(/[\d]+/);
 });

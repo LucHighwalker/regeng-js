@@ -6,6 +6,8 @@ const DigitSimp = /(any ((digit)|(number))(s)?){1}/;
 
 const AtCond = /( at )((start)|(end))( of )((line)|(string))/;
 
+const Everything = "[\\s\\S\\w\\W\\d\\D]";
+
 export default class Regeng {
 	plain: string;
 	re: RegExp;
@@ -14,10 +16,10 @@ export default class Regeng {
 		this.new(phrase);
 	}
 
-	public new(phrase: string): RegExp {
+	public new(phrase: string = undefined): RegExp {
 		this.plain = phrase;
 
-		let pattern: string = this._expression();
+		let pattern: string = phrase != undefined ? this._expression() : Everything;
 
 		this.re = new RegExp(pattern);
 		return this.re;
@@ -25,54 +27,49 @@ export default class Regeng {
 
 	private _expression(): string {
 		const phrase = this.plain;
-		let pattern = "";
 		switch (true) {
 			case CharacterCond.test(phrase):
-				pattern = this._characterCond();
-				break;
+				return this._characterCond();
 
 			case CharacterSimp.test(phrase):
-				pattern = this._characterSimp();
-				break;
+				return this._characterSimp();
 
 			case DigitCond.test(phrase):
-				console.log("this is true");
 				break;
 
 			case DigitSimp.test(phrase):
-				console.log("this is true");
-				break;
+				return "[\\d]+";
 
 			default:
-				break;
+				return Everything
 		}
-
-		return pattern;
 	}
 
 	private _characterCond(): string {
 		const phrase = this.plain.replace(/( through )|( to )/, "-");
 		const except = /(except)/.test(phrase) ? "^" : "";
 		const multiples = /(character)(s)/.test(phrase) ? "+" : "";
-    let characters = "";
-    
-    if (/[a-z]-[a-z]/.test(phrase)) {
-      characters = phrase.match(/[a-z]-[a-z]/)[0];
-    } else if (/(between )([a-z] )+(and )([a-z])/.test(phrase)) {
-      characters = phrase.replace(/( and )/, '-').match(/[a-z]-[a-z]/)[0];
-    } else if (/( ([a-z] )+(and )([a-z]))/.test(phrase)) {
-      characters = phrase.match(/( ([a-z] )+(and )([a-z]))/)[0].replace(/( )|(and)/g, '');
+		let characters = "";
+
+		if (/[a-z]-[a-z]/.test(phrase)) {
+			characters = phrase.match(/[a-z]-[a-z]/)[0];
+		} else if (/(between )([a-z] )+(and )([a-z])/.test(phrase)) {
+			characters = phrase.replace(/( and )/, "-").match(/[a-z]-[a-z]/)[0];
+		} else if (/( ([a-z] )+(and )([a-z]))/.test(phrase)) {
+			characters = phrase
+				.match(/( ([a-z] )+(and )([a-z]))/)[0]
+				.replace(/( )|(and)/g, "");
 		}
-		
-		if (/(uppercase)/.test(phrase)){
+
+		if (/(uppercase)/.test(phrase)) {
 			characters = characters.toUpperCase();
 		} else if (/(lowercase)/.test(phrase)) {
 			characters = characters.toLowerCase();
 		} else {
-			characters = `${characters.toUpperCase()}${characters.toLowerCase()}`
+			characters = `${characters.toUpperCase()}${characters.toLowerCase()}`;
 		}
 
-		return `${except}[${characters}]${multiples}`;
+		return `[${except}${characters}]${multiples}`;
 	}
 
 	private _characterSimp(): string {
